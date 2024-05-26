@@ -11,7 +11,7 @@ kafka-config:
 
 kafka-producer-config:
   key-serializer-class: org.apache.kafka.common.serialization.StringSerializer
-  value-serializer-class: org.apache.kafka.common.serialization.StringSerializer
+  value-serializer-class: org.apache.kafka.common.serialization.ByteArraySerializer
   compression-type: snappy
   acks: all
   batch-size: 16384

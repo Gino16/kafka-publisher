@@ -1,6 +1,7 @@
 package com.kafka.kafkapublisher;
 
 import com.kafka.kafkapublisher.service.PublisherService;
+import com.kafka.message.AvroMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +19,13 @@ public class KafkaPublisherApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    for (int i= 0; i < 100; i++ ) {
-      publisherService.sendMessage("topic-example", "a1", "some message");
+    AvroMessage avroMessage = AvroMessage.newBuilder()
+        .setId(0)
+        .setName("Gino")
+        .build();
+    for (int i = 0; i < 100; i++) {
+      avroMessage.setId(i);
+      publisherService.sendMessage("topic-example", "a1", avroMessage);
     }
   }
 }

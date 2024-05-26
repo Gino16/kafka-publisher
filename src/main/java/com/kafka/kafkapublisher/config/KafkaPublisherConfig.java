@@ -2,9 +2,11 @@ package com.kafka.kafkapublisher.config;
 
 import com.kafka.kafkapublisher.model.KafkaConfigData;
 import com.kafka.kafkapublisher.model.KafkaProducerConfigData;
+import com.kafka.message.AvroMessage;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +16,7 @@ import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
 @RequiredArgsConstructor
-public class KafkaPublisherConfig <K extends Serializable, V extends Serializable> {
+public class KafkaPublisherConfig <K extends Serializable, V extends SpecificRecordBase> {
 
   private final KafkaConfigData kafkaConfigData;
   private final KafkaProducerConfigData kafkaProducerConfigData;
@@ -43,7 +45,9 @@ public class KafkaPublisherConfig <K extends Serializable, V extends Serializabl
 
   @Bean
   public ProducerFactory<K, V> producerFactory() {
-    return new DefaultKafkaProducerFactory<>(producerConfig());
+    DefaultKafkaProducerFactory<K, V> producerFactory = new DefaultKafkaProducerFactory<>(producerConfig());
+    producerFactory.setValueSerializer(new AvroMessageSerializer());
+    return producerFactory;
   }
 
   @Bean
